@@ -30,7 +30,7 @@ repositories {
 dependencies {
 	// ваши зависимости
 	// ...
-	classpath 'com.github.Doomaykaka:PasswordManager:1.0.0'
+	implementation 'com.github.Doomaykaka:PasswordManager:1.0.0'
 }
 
 ```

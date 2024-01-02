@@ -12,7 +12,6 @@ import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.exceptions.EncryptionOperationNotPossibleException;
 import org.jasypt.iv.RandomIvGenerator;
 import org.jasypt.salt.RandomSaltGenerator;
-
 import passwordmanager.decoded.IRecord;
 import passwordmanager.decoded.IStorage;
 import passwordmanager.encoded.IRawData;

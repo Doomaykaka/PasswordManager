@@ -3,104 +3,102 @@
  */
 package passwordmanager;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-import passwordmanager.encoder.IEncoder.EncoderAlgorithm;
+import java.util.ArrayList;
+import org.junit.jupiter.api.Test;
 import passwordmanager.decoded.DefaultRecord;
 import passwordmanager.decoded.IRecord;
 import passwordmanager.decoded.IStorage;
 import passwordmanager.encoded.IRawData;
+import passwordmanager.encoder.IEncoder.EncoderAlgorithm;
 import passwordmanager.manager.Manager;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.util.ArrayList;
-
 class LibraryTest {
-    void managerInitialize() {
-        boolean needsLogs = false;
-        boolean needRawDataChecked = true;
-        boolean needMapStorage = false;
-        boolean needThreadEncoder = true;
-        Manager.initialize(needsLogs, needRawDataChecked, needMapStorage, needThreadEncoder);
+	void managerInitialize() {
+		boolean needsLogs = false;
+		boolean needRawDataChecked = true;
+		boolean needMapStorage = false;
+		boolean needThreadEncoder = true;
+		Manager.initialize(needsLogs, needRawDataChecked, needMapStorage, needThreadEncoder);
 
-        Manager.getContext().getEncoder().setAlgorithm(EncoderAlgorithm.SHA256);
-    }
+		Manager.getContext().getEncoder().setAlgorithm(EncoderAlgorithm.SHA256);
+	}
 
-    @Test
-    void simpleEncodeDecode() {
-        managerInitialize();
+	@Test
+	void simpleEncodeDecode() {
+		managerInitialize();
 
-        String coded = Manager.getContext().getEncoder().encodeString("Hello", "123");
+		String coded = Manager.getContext().getEncoder().encodeString("Hello", "123");
 
-        assertNotNull(Manager.getContext().getEncoder().decodeString(coded, "123"));
-        assertNull(Manager.getContext().getEncoder().decodeString(coded, "12"));
-    }
+		assertNotNull(Manager.getContext().getEncoder().decodeString(coded, "123"));
+		assertNull(Manager.getContext().getEncoder().decodeString(coded, "12"));
+	}
 
-    @Test
-    void structureEncodeDecode() {
-        managerInitialize();
+	@Test
+	void structureEncodeDecode() {
+		managerInitialize();
 
-        IRecord newRecord = new DefaultRecord();
-        newRecord.setLogin("admin");
-        newRecord.setPassword("123");
-        newRecord.setInfo("info");
-        IRecord newRecord2 = new DefaultRecord();
-        newRecord2.setLogin("admin2");
-        newRecord2.setPassword("123");
-        newRecord2.setInfo("info");
-        Manager.getContext().getStorage().create(newRecord);
-        Manager.getContext().getStorage().create(newRecord2);
+		IRecord newRecord = new DefaultRecord();
+		newRecord.setLogin("admin");
+		newRecord.setPassword("123");
+		newRecord.setInfo("info");
+		IRecord newRecord2 = new DefaultRecord();
+		newRecord2.setLogin("admin2");
+		newRecord2.setPassword("123");
+		newRecord2.setInfo("info");
+		Manager.getContext().getStorage().create(newRecord);
+		Manager.getContext().getStorage().create(newRecord2);
 
-        IRawData newRaw = Manager.getContext().getEncoder().encodeStruct(Manager.getContext().getStorage(), "123");
+		IRawData newRaw = Manager.getContext().getEncoder().encodeStruct(Manager.getContext().getStorage(), "123");
 
-        IStorage decodeStorage = Manager.getContext().getEncoder().decodeStruct(newRaw, "1"); // is null
+		IStorage decodeStorage = Manager.getContext().getEncoder().decodeStruct(newRaw, "1"); // is null
 
-        assertNull(decodeStorage);
+		assertNull(decodeStorage);
 
-        IStorage storage = Manager.getContext().getEncoder().decodeStruct(newRaw, "123");
-        IRecord decodeRecord = storage.getByIndex(0);
-        IRecord decodeRecord2 = storage.getByIndex(1);
+		IStorage storage = Manager.getContext().getEncoder().decodeStruct(newRaw, "123");
+		IRecord decodeRecord = storage.getByIndex(0);
+		IRecord decodeRecord2 = storage.getByIndex(1);
 
-        assertNotNull(storage);
-        assertNotNull(decodeRecord);
-        assertNotNull(decodeRecord2);
-    }
+		assertNotNull(storage);
+		assertNotNull(decodeRecord);
+		assertNotNull(decodeRecord2);
+	}
 
-    @Test
-    void savingRestoring() {
-        managerInitialize();
+	@Test
+	void savingRestoring() {
+		managerInitialize();
 
-        IRecord newRecord = new DefaultRecord();
-        newRecord.setLogin("admin");
-        newRecord.setPassword("123");
-        newRecord.setInfo("info");
-        IRecord newRecord2 = new DefaultRecord();
-        newRecord2.setLogin("admin2");
-        newRecord2.setPassword("123");
-        newRecord2.setInfo("info");
-        Manager.getContext().getStorage().create(newRecord);
-        Manager.getContext().getStorage().create(newRecord2);
+		IRecord newRecord = new DefaultRecord();
+		newRecord.setLogin("admin");
+		newRecord.setPassword("123");
+		newRecord.setInfo("info");
+		IRecord newRecord2 = new DefaultRecord();
+		newRecord2.setLogin("admin2");
+		newRecord2.setPassword("123");
+		newRecord2.setInfo("info");
+		Manager.getContext().getStorage().create(newRecord);
+		Manager.getContext().getStorage().create(newRecord2);
 
-        IRawData newRaw = Manager.getContext().getEncoder().encodeStruct(Manager.getContext().getStorage(), "123");
+		IRawData newRaw = Manager.getContext().getEncoder().encodeStruct(Manager.getContext().getStorage(), "123");
 
-        newRaw.save();
+		newRaw.save();
 
-        newRaw.setData(new ArrayList<String>());
-        newRaw.getData().forEach(System.out::print);
+		newRaw.setData(new ArrayList<String>());
+		newRaw.getData().forEach(System.out::print);
 
-        newRaw.load();
+		newRaw.load();
 
-        IStorage decodeStorage = Manager.getContext().getEncoder().decodeStruct(newRaw, "1"); // is null
+		IStorage decodeStorage = Manager.getContext().getEncoder().decodeStruct(newRaw, "1"); // is null
 
-        assertNull(decodeStorage);
+		assertNull(decodeStorage);
 
-        IStorage storage = Manager.getContext().getEncoder().decodeStruct(newRaw, "123");
-        IRecord decodeRecord = storage.getByIndex(0);
-        IRecord decodeRecord2 = storage.getByIndex(1);
+		IStorage storage = Manager.getContext().getEncoder().decodeStruct(newRaw, "123");
+		IRecord decodeRecord = storage.getByIndex(0);
+		IRecord decodeRecord2 = storage.getByIndex(1);
 
-        assertNotNull(storage);
-        assertNotNull(decodeRecord);
-        assertNotNull(decodeRecord2);
-    }
+		assertNotNull(storage);
+		assertNotNull(decodeRecord);
+		assertNotNull(decodeRecord2);
+	}
 }

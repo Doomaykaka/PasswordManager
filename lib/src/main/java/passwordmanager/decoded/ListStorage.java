@@ -3,7 +3,6 @@ package passwordmanager.decoded;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import passwordmanager.manager.Logger;
 
 /**
