@@ -104,9 +104,7 @@ public class DefaultRawData implements IRawData {
 	 */
 	@Override
 	public void save() {
-		if (getPathToSaveFile() == null) {
-			generateSaveFilePath();
-		}
+		generateSaveFilePath();
 
 		try {
 			FileWriter writer = new FileWriter(getPathToSaveFile());
