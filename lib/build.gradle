@@ -40,6 +40,8 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
     }
+    
+    withJavadocJar()
 }
 
 versioner {
@@ -67,6 +69,18 @@ javadoc{
 	destinationDir = file("${project.rootDir}/docs")
 	title = "Password Manager v${project.version}"
 }
+
+def taskX = tasks.register('javadocCopy') {
+	def directory = file(project.rootDir.getAbsolutePath() + "/javadoc/")
+    	
+    directory.mkdir()
+    copy {
+         from "${project.rootDir}/lib/build/libs/lib-${project.version}-javadoc.jar"
+         into directory.toPath()
+    }
+}
+
+tasks.named("build") { finalizedBy("javadocCopy") }
 
 spotless {
   java {
