@@ -35,6 +35,40 @@ dependencies {
 
 ```
 
+Для отображения документации в Eclipse необходимо изменить содержимое своего build.gradle скрипта:
+
+```groovy
+
+// ваши плагины
+// ...
+
+id 'eclipse'
+
+// ваш скрипт
+// ...
+
+eclipse.classpath.downloadJavadoc = true
+eclipse.classpath.downloadSources = true
+
+```
+
+Для отображения документации в Idea необходимо изменить содержимое своего build.gradle скрипта:
+
+```groovy
+
+// ваши плагины
+// ...
+
+id 'idea'
+
+// ваш скрипт
+// ...
+
+idea.classpath.downloadJavadoc = true
+idea.classpath.downloadSources = true
+
+```
+
 ## Использование библиотеки
 
 Для использования менеджера сначала его необходимо проинициализировать.

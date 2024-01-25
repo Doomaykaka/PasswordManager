@@ -44,6 +44,10 @@ java {
     withJavadocJar()
 }
 
+jar{
+  from sourceSets.main.allSource
+}
+
 versioner {
 	pattern {
         pattern = "%M.%m.%p"
@@ -76,6 +80,10 @@ def taskX = tasks.register('javadocCopy') {
     directory.mkdir()
     copy {
          from "${project.rootDir}/lib/build/libs/lib-${project.version}-javadoc.jar"
+         into directory.toPath()
+    }
+    copy {
+         from "${project.rootDir}/lib/build/libs/lib-${project.version}-sources.jar"
          into directory.toPath()
     }
 }
